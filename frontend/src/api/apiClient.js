@@ -2,34 +2,18 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1',
-  withCredentials: true
+  withCredentials: false
 });
 
+// Simple in-memory response cache (GET requests, 60s TTL)
 const cache = new Map();
-
-apiClient.interceptors.request.use((config) => {
-  if (config.method === 'get') {
-    const url = axios.getUri(config);
-    const cached = cache.get(url);
-    if (cached && Date.now() - cached.timestamp < 60000) {
-      config.adapter = () => Promise.resolve({
-        data: cached.data,
-        status: 200,
-        statusText: 'OK',
-        headers: {},
-        config,
-        request: {}
-      });
-    }
-  }
-  return config;
-});
 
 apiClient.interceptors.response.use(
   (res) => {
+    // Cache GET responses
     if (res.config.method === 'get') {
-      const url = axios.getUri(res.config);
-      cache.set(url, { data: res.data, timestamp: Date.now() });
+      const key = res.config.baseURL + res.config.url + JSON.stringify(res.config.params);
+      cache.set(key, { data: res.data, timestamp: Date.now() });
     }
     return res.data;
   },

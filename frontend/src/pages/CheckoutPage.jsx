@@ -6,7 +6,11 @@ import { cartApi } from '../api/cartApi';
 import apiClient from '../api/apiClient'; // Or create orderApi
 
 export default function CheckoutPage() {
-  const { cartId, clearCart, items, subtotal } = useCartStore();
+  const cartId = useCartStore(state => state.cartId);
+  const clearCart = useCartStore(state => state.clearCart);
+  const items = useCartStore(state => state.items);
+  const getSubtotal = useCartStore(state => state.getSubtotal);
+  const subtotal = getSubtotal();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

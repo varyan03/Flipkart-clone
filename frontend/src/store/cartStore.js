@@ -18,8 +18,7 @@ const useCartStore = create((set, get) => ({
       const cart = await cartApi.getCart(cartId);
       set({ items: cart.data.items });
     } catch (e) {
-      console.error(e);
-      // Fallback: clear cart ID if not found and retry once or ignore
+      console.error('initCart error:', e);
       localStorage.removeItem('fk_cart_id');
       set({ cartId: null, items: [] });
     }
@@ -38,14 +37,13 @@ const useCartStore = create((set, get) => ({
   },
 
   updateQuantity: async (productId, quantity) => {
-    // Optimistic update
     const previousItems = get().items;
     set({ items: previousItems.map(i => i.productId === productId ? { ...i, quantity } : i) });
     try {
       await cartApi.updateItem(get().cartId, productId, { quantity });
       await get()._refresh();
     } catch (err) {
-      set({ items: previousItems }); // Revert
+      set({ items: previousItems });
     }
   },
 
@@ -69,12 +67,15 @@ const useCartStore = create((set, get) => ({
     try {
       const cart = await cartApi.getCart(get().cartId);
       set({ items: cart.data.items });
-    } catch (e) {}
+    } catch (e) {
+      console.error('_refresh error:', e);
+    }
   },
 
-  get itemCount() { return get().items.reduce((s, i) => s + i.quantity, 0) },
-  get subtotal()  { return get().items.reduce((s, i) => s + i.product.price * i.quantity, 0) },
-  get savings()   { return get().items.reduce((s, i) => s + (i.product.mrp - i.product.price) * i.quantity, 0) },
+  // Computed values as plain functions — Zustand does NOT support JS getter syntax
+  getItemCount: () => get().items.reduce((s, i) => s + i.quantity, 0),
+  getSubtotal: () => get().items.reduce((s, i) => s + Number(i.product.price) * i.quantity, 0),
+  getSavings: () => get().items.reduce((s, i) => s + (Number(i.product.mrp) - Number(i.product.price)) * i.quantity, 0),
 }));
 
 export default useCartStore;

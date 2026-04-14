@@ -2,7 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
-  const { items, itemCount, subtotal, savings, updateQuantity, removeItem } = useCartStore();
+  const items = useCartStore(state => state.items);
+  const updateQuantity = useCartStore(state => state.updateQuantity);
+  const removeItem = useCartStore(state => state.removeItem);
+  const getItemCount = useCartStore(state => state.getItemCount);
+  const getSubtotal = useCartStore(state => state.getSubtotal);
+  const getSavings = useCartStore(state => state.getSavings);
+  const itemCount = getItemCount();
+  const subtotal = getSubtotal();
+  const savings = getSavings();
   const navigate = useNavigate();
 
   if (itemCount === 0) {
