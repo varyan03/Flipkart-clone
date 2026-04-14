@@ -2,7 +2,7 @@ const prisma = require('../lib/prisma');
 const { AppError } = require('../utils/response');
 const { randomUUID } = require('crypto');
 
-async function placeOrder(cartId, addressInfo) {
+async function placeOrder(cartId, addressInfo, userId = null) {
   const cart = await prisma.cart.findUnique({
     where: { id: cartId },
     include: { items: { include: { product: true } } }
@@ -27,6 +27,7 @@ async function placeOrder(cartId, addressInfo) {
     const newOrder = await tx.order.create({
       data: {
         id: orderId,
+        userId,           // attach user if logged in
         subtotal,
         discount,
         total,
@@ -49,7 +50,6 @@ async function placeOrder(cartId, addressInfo) {
     }
 
     await tx.cart.delete({ where: { id: cartId } });
-
     return newOrder;
   });
 
@@ -63,22 +63,29 @@ async function getOrderById(orderId) {
       address: true,
       items: {
         include: {
-          product: {
-            select: { name: true, images: true }
-          }
+          product: { select: { name: true, images: true } }
         }
       }
     }
   });
 
-  if (!order) {
-    throw new AppError('Order not found', 404);
-  }
-
+  if (!order) throw new AppError('Order not found', 404);
   return order;
 }
 
-module.exports = {
-  placeOrder,
-  getOrderById
-};
+async function getOrderHistory(userId) {
+  return prisma.order.findMany({
+    where: { userId },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      address: { select: { city: true, pincode: true } },
+      items: {
+        include: {
+          product: { select: { name: true, images: true } }
+        }
+      }
+    }
+  });
+}
+
+module.exports = { placeOrder, getOrderById, getOrderHistory };

@@ -7,6 +7,41 @@ datasource db {
   url      = "file:./dev.db"
 }
 
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String
+  passwordHash  String
+  cart          Cart?
+  orders        Order[]
+  wishlist      Wishlist[]
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
 model Category {
   id        Int       @id @default(autoincrement())
   name      String    @unique
@@ -16,22 +51,23 @@ model Category {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  description String
-  price       Float
-  mrp         Float
-  stock       Int         @default(0)
-  rating      Float       @default(0)
-  ratingCount Int         @default(0)
-  brand       String
-  images      String      // Stored as JSON string due to SQLite limitations
-  specs       String      // Stored as JSON string due to SQLite limitations
-  categoryId  Int
-  category    Category    @relation(fields: [categoryId], references: [id])
-  cartItems   CartItem[]
-  orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
+  id           Int         @id @default(autoincrement())
+  name         String
+  description  String
+  price        Float
+  mrp          Float
+  stock        Int         @default(0)
+  rating       Float       @default(0)
+  ratingCount  Int         @default(0)
+  brand        String
+  images       String      // Stored as JSON string due to SQLite limitations
+  specs        String      // Stored as JSON string due to SQLite limitations
+  categoryId   Int
+  category     Category    @relation(fields: [categoryId], references: [id])
+  cartItems    CartItem[]
+  orderItems   OrderItem[]
+  wishlistedBy Wishlist[]
+  createdAt    DateTime    @default(now())
 
   @@index([categoryId])
   @@index([name])
@@ -40,6 +76,8 @@ model Product {
 
 model Cart {
   id        String     @id
+  userId    Int?       @unique
+  user      User?      @relation(fields: [userId], references: [id])
   items     CartItem[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
@@ -58,6 +96,8 @@ model CartItem {
 
 model Order {
   id             String      @id
+  userId         Int?
+  user           User?       @relation(fields: [userId], references: [id])
   status         String      @default("PLACED")
   subtotal       Float
   discount       Float       @default(0)
@@ -66,6 +106,8 @@ model Order {
   items          OrderItem[]
   address        Address?
   createdAt      DateTime    @default(now())
+
+  @@index([userId])
 }
 
 model OrderItem {

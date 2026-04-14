@@ -1,22 +1,36 @@
 const express = require('express');
-const { placeOrder, getOrderById } = require('../services/orderService');
+const { placeOrder, getOrderById, getOrderHistory } = require('../services/orderService');
+const { authenticate, optionalAuth } = require('../middleware/authenticate');
 const { sendSuccess } = require('../utils/response');
 
 const router = express.Router();
 
-router.post('/orders', async (req, res, next) => {
+// Place order — works for guest and logged-in users
+router.post('/', optionalAuth, async (req, res, next) => {
   try {
     const { cartId, address } = req.body;
-    const data = await placeOrder(cartId, address);
+    const userId = req.user?.id || null;
+    const data = await placeOrder(cartId, address, userId);
     sendSuccess(res, data, 'Order placed successfully', 201);
   } catch (err) {
     next(err);
   }
 });
 
-router.get('/orders/:orderId', async (req, res, next) => {
+// Get single order by ID
+router.get('/:orderId', async (req, res, next) => {
   try {
     const data = await getOrderById(req.params.orderId);
+    sendSuccess(res, data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Get order history — requires auth
+router.get('/', authenticate, async (req, res, next) => {
+  try {
+    const data = await getOrderHistory(req.user.id);
     sendSuccess(res, data);
   } catch (err) {
     next(err);
