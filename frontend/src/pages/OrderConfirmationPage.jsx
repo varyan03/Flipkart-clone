@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import apiClient from '../../api/apiClient';
+import apiClient from '../api/apiClient';
 
 export default function OrderConfirmationPage() {
   const { orderId } = useParams();

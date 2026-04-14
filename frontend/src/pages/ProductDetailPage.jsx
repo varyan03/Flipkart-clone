@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { productApi } from '../../api/productApi';
-import useCartStore from '../../store/cartStore';
-import ImageCarousel from '../../components/product/ImageCarousel';
+import { productApi } from '../api/productApi';
+import useCartStore from '../store/cartStore';
+import ImageCarousel from '../components/product/ImageCarousel';
 
 export default function ProductDetailPage() {
   const { id } = useParams();

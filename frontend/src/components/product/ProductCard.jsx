@@ -23,30 +23,38 @@ export default function ProductCard({ product }) {
   return (
     <div 
       onClick={() => navigate(`/product/${product.id}`)}
+      className="animate-fade-in"
       style={{
         background: 'var(--fk-bg-card)',
-        padding: '16px',
-        border: '1px solid #f0f0f0',
-        borderRadius: '2px',
+        padding: '20px',
+        border: '1px solid var(--fk-border)',
+        borderRadius: '16px',
         cursor: 'pointer',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'box-shadow 0.2s ease',
+        transition: 'var(--transition-smooth)',
         height: '100%',
-        position: 'relative'
+        position: 'relative',
+        overflow: 'hidden'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = '0 4px 15px 0 rgba(0,0,0,0.15)';
+        e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
+        e.currentTarget.style.transform = 'translateY(-4px)';
+        e.currentTarget.style.borderColor = 'transparent';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = 'none';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.borderColor = 'var(--fk-border)';
       }}
     >
-      <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+      <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', padding: '10px' }}>
         <img 
           src={imageUrl} 
           alt={product.name} 
-          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }} 
+          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform var(--transition-smooth)' }} 
+          onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
+          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
         />
       </div>
       

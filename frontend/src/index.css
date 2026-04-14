@@ -1,36 +1,43 @@
 :root {
-  /* Primary brand */
+  /* Premium Brand Colors */
   --fk-blue:        #2874f0;
-  --fk-blue-dark:   #2469d9;
-  --fk-yellow:      #ffe11b;
+  --fk-blue-dark:   #1a5dc7;
+  --fk-blue-gradient: linear-gradient(135deg, #2874f0 0%, #1a5dc7 100%);
+  --fk-yellow:      #ffb000;
   --fk-orange:      #ff9f00;
-  --fk-orange-dark: #f08000;
   --fk-buy-now:     #fb641b;
 
   /* Text */
-  --fk-text-primary:   #212121;
-  --fk-text-secondary: #878787;
-  --fk-text-muted:     #aaaaaa;
+  --fk-text-primary:   #1a1f24;
+  --fk-text-secondary: #6b7280;
+  --fk-text-muted:     #9ca3af;
 
   /* Status */
-  --fk-green:       #388e3c;
-  --fk-green-mid:   #26a541;
-  --fk-amber:       #ff9800;
-  --fk-red:         #ff6161;
+  --fk-green:       #16a34a;
+  --fk-green-mid:   #22c55e;
+  --fk-amber:       #f59e0b;
+  --fk-red:         #ef4444;
 
-  /* Surfaces */
-  --fk-bg-page:   #f1f3f6;
-  --fk-bg-card:   #ffffff;
-  --fk-border:    #e0e0e0;
+  /* Surfaces & Shadows */
+  --fk-bg-page:       #f8fafc;
+  --fk-bg-card:       #ffffff;
+  --fk-border:        #e5e7eb;
+  --shadow-sm:        0 1px 3px rgba(0,0,0,0.05);
+  --shadow-md:        0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-hover:     0 15px 30px -5px rgba(0,0,0,0.1), 0 8px 10px -5px rgba(0,0,0,0.05);
+  --transition-fast:  0.15s ease-out;
+  --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
-  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 14px;
+  line-height: 1.5;
   color: var(--fk-text-primary);
   background-color: var(--fk-bg-page);
   margin: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 * {
@@ -40,11 +47,17 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+  transition: color var(--transition-fast);
 }
 
 button {
   cursor: pointer;
   font-family: inherit;
+  transition: all var(--transition-fast);
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 /* Utilities */
@@ -58,13 +71,25 @@ button {
 .rating-badge {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 2px 6px;
-  border-radius: 3px;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 12px;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   color: #fff;
+  box-shadow: var(--shadow-sm);
 }
-.rating-high { background: var(--fk-green); }
-.rating-mid { background: var(--fk-green-mid); }
-.rating-low { background: var(--fk-red); }
+
+.rating-high { background: linear-gradient(135deg, var(--fk-green-mid), var(--fk-green)); }
+.rating-mid { background: linear-gradient(135deg, var(--fk-amber), #d97706); }
+.rating-low { background: linear-gradient(135deg, var(--fk-red), #b91c1c); }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-smooth);
+}

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import useCartStore from '../../store/cartStore';
+import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
   const { items, itemCount, subtotal, savings, updateQuantity, removeItem } = useCartStore();

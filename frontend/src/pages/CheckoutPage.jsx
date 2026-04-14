@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import useCartStore from '../../store/cartStore';
-import { cartApi } from '../../api/cartApi';
-import apiClient from '../../api/apiClient'; // Or create orderApi
+import useCartStore from '../store/cartStore';
+import { cartApi } from '../api/cartApi';
+import apiClient from '../api/apiClient'; // Or create orderApi
 
 export default function CheckoutPage() {
   const { cartId, clearCart, items, subtotal } = useCartStore();

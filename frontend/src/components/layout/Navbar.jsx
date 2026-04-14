@@ -22,15 +22,16 @@ export default function Navbar() {
 
   return (
     <nav style={{
-      height: '56px',
-      backgroundColor: 'var(--fk-blue)',
-      padding: '0 16px',
+      height: '64px',
+      background: 'var(--fk-blue-gradient)',
+      padding: '0 24px',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       position: 'sticky',
       top: 0,
-      zIndex: 100
+      zIndex: 100,
+      boxShadow: 'var(--shadow-md)'
     }}>
       <div style={{ display: 'flex', alignItems: 'center', maxWidth: '1248px', width: '100%', gap: '20px' }}>
         
