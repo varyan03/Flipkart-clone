@@ -2,22 +2,54 @@ import axios from 'axios';
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1',
-  withCredentials: false
+  withCredentials: true,  // sends httpOnly cookies automatically
 });
 
-// Simple in-memory response cache (GET requests, 60s TTL)
-const cache = new Map();
+// 401 auto-refresh interceptor
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error) => {
+  failedQueue.forEach(({ resolve, reject }) => error ? reject(error) : resolve());
+  failedQueue = [];
+};
 
 apiClient.interceptors.response.use(
-  (res) => {
-    // Cache GET responses
-    if (res.config.method === 'get') {
-      const key = res.config.baseURL + res.config.url + JSON.stringify(res.config.params);
-      cache.set(key, { data: res.data, timestamp: Date.now() });
+  (res) => res.data,  // unwrap to res.data for convenience
+  async (err) => {
+    const originalRequest = err.config;
+
+    if (
+      err.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes('/auth/refresh') &&
+      !originalRequest.url?.includes('/auth/login')
+    ) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => apiClient(originalRequest));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        await axios.post(
+          `${apiClient.defaults.baseURL}/auth/refresh`,
+          {},
+          { withCredentials: true }
+        );
+        processQueue(null);
+        return apiClient(originalRequest);
+      } catch (refreshErr) {
+        processQueue(refreshErr);
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
+      }
     }
-    return res.data;
-  },
-  (err) => {
+
     const message = err.response?.data?.error || 'Something went wrong. Please try again.';
     return Promise.reject(new Error(message));
   }

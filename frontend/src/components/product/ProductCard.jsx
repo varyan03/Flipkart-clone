@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import WishlistButton from './WishlistButton';
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -48,14 +49,16 @@ export default function ProductCard({ product }) {
         e.currentTarget.style.borderColor = 'var(--fk-border)';
       }}
     >
-      <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', padding: '10px' }}>
+      <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', padding: '10px', position: 'relative' }}>
         <img 
           src={imageUrl} 
           alt={product.name} 
           style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform var(--transition-smooth)' }} 
           onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
           onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          loading="lazy"
         />
+        <WishlistButton productId={product.id} size="sm" />
       </div>
       
       <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
