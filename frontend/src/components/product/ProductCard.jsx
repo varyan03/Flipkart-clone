@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import WishlistButton from './WishlistButton';
+import AssuredBadge from '../ui/AssuredBadge';
 
 export default function ProductCard({ product }) {
   const navigate = useNavigate();
@@ -15,86 +16,118 @@ export default function ProductCard({ product }) {
 
   const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 
-  const getRatingClass = (rating) => {
-    if (rating >= 4.0) return 'rating-high';
-    if (rating >= 3.0) return 'rating-mid';
-    return 'rating-low';
-  };
-
   return (
     <div 
       onClick={() => navigate(`/product/${product.id}`)}
-      className="animate-fade-in"
       style={{
-        background: 'var(--fk-bg-card)',
-        padding: '20px',
-        border: '1px solid var(--fk-border)',
-        borderRadius: '16px',
-        cursor: 'pointer',
+        background: '#fff',
         display: 'flex',
         flexDirection: 'column',
-        transition: 'var(--transition-smooth)',
-        height: '100%',
+        cursor: 'pointer',
+        transition: 'box-shadow 0.2s ease-in-out',
         position: 'relative',
-        overflow: 'hidden'
+        padding: '0 0 16px 0',
+        height: '100%',
+        textDecoration: 'none'
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = 'var(--shadow-hover)';
-        e.currentTarget.style.transform = 'translateY(-4px)';
-        e.currentTarget.style.borderColor = 'transparent';
+        e.currentTarget.style.boxShadow = '0 3px 16px 0 rgba(0,0,0,0.11)';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'var(--fk-border)';
       }}
     >
-      <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', padding: '10px', position: 'relative' }}>
+      {/* Wishlist Button in Top Right */}
+      <div style={{ position: 'absolute', top: '8px', right: '8px', zIndex: 10 }}>
+        <WishlistButton productId={product.id} />
+      </div>
+
+      {/* Product Image Container */}
+      <div style={{ 
+        position: 'relative', 
+        width: '100%', 
+        paddingTop: '133%', // 3:4 Aspect Ratio
+        backgroundColor: '#fff',
+        borderBottom: '1px solid #f0f0f0' 
+      }}>
         <img 
           src={imageUrl} 
           alt={product.name} 
-          style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', transition: 'transform var(--transition-smooth)' }} 
-          onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            padding: '12px'
+          }} 
           loading="lazy"
         />
-        <WishlistButton productId={product.id} size="sm" />
       </div>
       
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ color: 'var(--fk-text-secondary)', fontSize: '12px', fontWeight: 500, marginBottom: '4px' }}>
+      {/* Content Section */}
+      <div style={{ padding: '8px 16px 0' }}>
+        {/* Brand Name */}
+        <div style={{ 
+          fontSize: '14px', 
+          fontWeight: 700, 
+          color: '#878787', 
+          marginBottom: '4px',
+          textTransform: 'uppercase'
+        }}>
           {product.brand}
         </div>
         
-        <div className="line-clamp-2" style={{ color: 'var(--fk-text-primary)', fontSize: '14px', marginBottom: '6px' }}>
-          {product.name}
+        {/* Product Title + Assured Badge */}
+        <div style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          marginBottom: '8px',
+          height: '18px',
+          overflow: 'hidden'
+        }}>
+          <span style={{ 
+            fontSize: '14px', 
+            color: '#212121', 
+            whiteSpace: 'nowrap', 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis',
+            flex: 1
+          }}>
+            {product.name}
+          </span>
+          <AssuredBadge height={14} />
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <span className={`rating-badge ${getRatingClass(product.rating)}`}>
-            {product.rating} ★
+        {/* Price Section */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <span style={{ 
+            fontSize: '16px', 
+            fontWeight: 700, 
+            color: '#212121' 
+          }}>
+            ₹{product.price.toLocaleString('en-IN')}
           </span>
-          <span style={{ color: 'var(--fk-text-secondary)', fontSize: '12px' }}>
-            ({product.ratingCount.toLocaleString()})
-          </span>
-        </div>
-        
-        <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-          <span style={{ fontSize: '16px', fontWeight: 500 }}>₹{product.price.toLocaleString('en-IN')}</span>
+          
           {discountPercent > 0 && (
             <>
-              <span style={{ fontSize: '13px', color: 'var(--fk-text-secondary)', textDecoration: 'line-through' }}>
+              <span style={{ 
+                fontSize: '14px', 
+                color: '#878787', 
+                textDecoration: 'line-through' 
+              }}>
                 ₹{product.mrp.toLocaleString('en-IN')}
               </span>
-              <span style={{ fontSize: '13px', color: 'var(--fk-green)', fontWeight: 500 }}>
+              <span style={{ 
+                fontSize: '14px', 
+                color: '#388e3c', 
+                fontWeight: 700 
+              }}>
                 {discountPercent}% off
               </span>
             </>
           )}
-        </div>
-        
-        <div style={{ fontSize: '12px', color: 'var(--fk-text-primary)', marginTop: '4px' }}>
-          Free delivery
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import useCartStore from '../../store/cartStore';
 import useAuthStore from '../../store/authStore';
+import { HeartIcon, OrdersIcon, ChevronDownIcon, LogoutIcon } from '../icons/Icons';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -92,36 +93,40 @@ export default function Navbar() {
                 fontWeight: 500, fontSize: '15px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '4px'
               }}>
-                {user.name.split(' ')[0]} <span>▾</span>
+                {user.name.split(' ')[0]} <ChevronDownIcon />
               </button>
 
               {userMenuOpen && (
                 <div style={{
                   position: 'absolute', top: '100%', right: 0,
-                  background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                  borderRadius: '4px', minWidth: '180px', zIndex: 200,
-                  padding: '8px 0', marginTop: '8px'
+                  paddingTop: '8px', zIndex: 200
                 }}>
-                  {[
-                    { label: '📦 My Orders', to: '/orders' },
-                    { label: '🤍 Wishlist', to: '/wishlist' },
-                  ].map(({ label, to }) => (
-                    <Link key={to} to={to} style={{
-                      display: 'block', padding: '12px 20px', fontSize: '14px',
-                      color: 'var(--fk-text-primary)', borderBottom: '1px solid #f0f0f0'
+                  <div style={{
+                    background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    borderRadius: '4px', minWidth: '180px',
+                    padding: '8px 0'
+                  }}>
+                    {[
+                      { label: 'Orders', icon: OrdersIcon, to: '/orders' },
+                      { label: 'Wishlist', icon: HeartIcon, to: '/wishlist' },
+                    ].map(({ label, icon: Icon, to }) => (
+                      <Link key={to} to={to} style={{
+                        display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', fontSize: '14px',
+                        color: 'var(--fk-text-primary)', borderBottom: '1px solid #f0f0f0', textDecoration: 'none'
+                      }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      ><Icon style={{ width: '16px', height: '16px', color: 'var(--fk-blue)' }} /> {label}</Link>
+                    ))}
+                    <button onClick={handleLogout} style={{
+                      display: 'flex', alignItems: 'center', gap: '12px', width: '100%', textAlign: 'left',
+                      padding: '12px 20px', fontSize: '14px', color: 'var(--fk-red)',
+                      background: 'none', border: 'none', cursor: 'pointer'
                     }}
-                      onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
+                      onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                    >{label}</Link>
-                  ))}
-                  <button onClick={handleLogout} style={{
-                    display: 'block', width: '100%', textAlign: 'left',
-                    padding: '12px 20px', fontSize: '14px', color: 'var(--fk-red)',
-                    background: 'none', border: 'none', cursor: 'pointer'
-                  }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#fff0f0'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                  >🚪 Logout</button>
+                    ><LogoutIcon style={{ width: '16px', height: '16px' }} /> Logout</button>
+                  </div>
                 </div>
               )}
             </div>
@@ -140,8 +145,8 @@ export default function Navbar() {
           )}
 
           {/* More */}
-          <div style={{ color: '#fff', fontWeight: 500, fontSize: '15px', cursor: 'pointer' }}>
-            More ▾
+          <div style={{ color: '#fff', fontWeight: 500, fontSize: '15px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+            More <ChevronDownIcon />
           </div>
 
           {/* Cart */}

@@ -1,12 +1,15 @@
 import { useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import useAuthStore from './store/authStore';
 import useCartStore from './store/cartStore';
 import useWishlistStore from './store/wishlistStore';
 import Navbar from './components/layout/Navbar';
+import HomeNavbar from './components/layout/HomeNavbar';
+import Footer from './components/layout/Footer';
 import CategoryBar from './components/layout/CategoryBar';
 import ProtectedRoute from './components/ui/ProtectedRoute';
 
+import LandingPage from './pages/LandingPage';
 import ProductListingPage from './pages/ProductListingPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
@@ -48,27 +51,39 @@ export default function App() {
     );
   }
 
+  const AppContent = () => {
+    const location = useLocation();
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        {location.pathname === '/' ? <HomeNavbar /> : <Navbar />}
+        <main style={{ flex: 1 }}>
+          <Routes>
+            <Route path="/" element={<><CategoryBar /><LandingPage /></>} />
+            <Route path="/products" element={<><CategoryBar /><ProductListingPage /></>} />
+            <Route path="/product/:id" element={<ProductDetailPage />} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} />
+              <Route path="/orders" element={<OrderHistoryPage />} />
+              <Route path="/wishlist" element={<WishlistPage />} />
+            </Route>
+
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    );
+  };
+
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<><CategoryBar /><ProductListingPage /></>} />
-        <Route path="/products" element={<><CategoryBar /><ProductListingPage /></>} />
-        <Route path="/product/:id" element={<ProductDetailPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-confirmation/:orderId" element={<OrderConfirmationPage />} />
-          <Route path="/orders" element={<OrderHistoryPage />} />
-          <Route path="/wishlist" element={<WishlistPage />} />
-        </Route>
-
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+      <AppContent />
     </BrowserRouter>
   );
 }

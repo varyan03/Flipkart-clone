@@ -1,13 +1,13 @@
 import useAuthStore from '../../store/authStore';
 import useWishlistStore from '../../store/wishlistStore';
 import { useNavigate } from 'react-router-dom';
+import { HeartIcon } from '../icons/Icons';
 
 /**
  * Heart icon button. Fills when wishlisted.
- * Redirects to /login if not authenticated.
- * size: 'sm' (on cards) | 'lg' (on detail page)
+ * Simplified design to match Flipkart reference image.
  */
-export default function WishlistButton({ productId, size = 'sm' }) {
+export default function WishlistButton({ productId, style = {} }) {
   const user = useAuthStore(state => state.user);
   const isWishlisted = useWishlistStore(state => state.isWishlisted);
   const toggle = useWishlistStore(state => state.toggle);
@@ -33,11 +33,27 @@ export default function WishlistButton({ productId, size = 'sm' }) {
   return (
     <button
       onClick={handleClick}
-      className={`wishlist-btn wishlist-btn--${size}`}
       aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-      title={wishlisted ? 'Remove from wishlist' : 'Save for later'}
+      style={{
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '8px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: wishlisted ? '#ff4343' : '#c2c2c2',
+        transition: 'all 0.2s ease',
+        ...style
+      }}
+      onMouseEnter={e => {
+        if (!wishlisted) e.currentTarget.style.color = '#ff4343';
+      }}
+      onMouseLeave={e => {
+        if (!wishlisted) e.currentTarget.style.color = '#c2c2c2';
+      }}
     >
-      {wishlisted ? '❤️' : '🤍'}
+      <HeartIcon fill={wishlisted} />
     </button>
   );
 }

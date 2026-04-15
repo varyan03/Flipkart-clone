@@ -26,7 +26,7 @@
 Before building anything new, here is a clear list of what needs to be modified in the existing code — so there are no surprises.
 
 ### Backend Changes
-
+`
 | File | Change |
 |---|---|
 | `prisma/schema.prisma` | Add `User`, `Wishlist` models; link `Order` and `Cart` to `User` |
