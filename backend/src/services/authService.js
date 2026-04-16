@@ -42,11 +42,20 @@ async function createRefreshToken(userId) {
  */
 function setAuthCookies(res, accessToken, refreshToken) {
   const isProd = process.env.NODE_ENV === 'production';
-  res.cookie('accessToken', accessToken, {
-    httpOnly: true, secure: isProd, sameSite: 'strict', maxAge: 15 * 60 * 1000
-  });
+  
+  // Note: sameSite: 'none' requires secure: true. 
+  // This allows cookies to be sent across different domains (Vercel -> Render).
+  const cookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax', // Use 'none' for cross-domain production
+    maxAge: 15 * 60 * 1000
+  };
+
+  res.cookie('accessToken', accessToken, cookieOptions);
   res.cookie('refreshToken', refreshToken, {
-    httpOnly: true, secure: isProd, sameSite: 'strict', maxAge: REFRESH_EXPIRY_MS
+    ...cookieOptions,
+    maxAge: REFRESH_EXPIRY_MS
   });
 }
 
