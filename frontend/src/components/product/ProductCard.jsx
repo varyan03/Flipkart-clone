@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import WishlistButton from './WishlistButton';
 import AssuredBadge from '../ui/AssuredBadge';
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, isDealsVariant = false }) {
   const navigate = useNavigate();
 
   // Handle parsing images array properly since it's JSON string in SQLite
@@ -16,6 +16,34 @@ export default function ProductCard({ product }) {
 
   const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 
+  if (isDealsVariant) {
+    return (
+      <div 
+        onClick={() => navigate(`/product/${product.id}`)}
+        style={{
+          background: '#fff',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          cursor: 'pointer',
+          padding: '12px',
+          height: '100%',
+          textAlign: 'center'
+        }}
+      >
+        <div style={{ width: '100%', height: '180px', marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <img src={imageUrl} alt={product.name} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+        </div>
+        <div style={{ fontSize: '14px', color: '#212121', marginBottom: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', width: '100%' }}>
+          {product.name}
+        </div>
+        <div style={{ fontSize: '14px', fontWeight: 700, color: '#388e3c' }}>
+          Min. {discountPercent}% Off
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div 
       onClick={() => navigate(`/product/${product.id}`)}
@@ -28,7 +56,10 @@ export default function ProductCard({ product }) {
         position: 'relative',
         padding: '0 0 16px 0',
         height: '100%',
-        textDecoration: 'none'
+        textDecoration: 'none',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        border: '1px solid #f0f0f0'
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.boxShadow = '0 3px 16px 0 rgba(0,0,0,0.11)';
@@ -47,8 +78,7 @@ export default function ProductCard({ product }) {
         position: 'relative', 
         width: '100%', 
         paddingTop: '133%', // 3:4 Aspect Ratio
-        backgroundColor: '#fff',
-        borderBottom: '1px solid #f0f0f0' 
+        backgroundColor: '#fff'
       }}>
         <img 
           src={imageUrl} 

@@ -159,9 +159,7 @@ export default function CategoryBar() {
                   fontWeight: 500,
                   color: '#212121',
                   textAlign: 'center',
-                  maxWidth: '56px',
-                  whiteSpace: 'normal',
-                  wordBreak: 'break-word',
+                  whiteSpace: 'nowrap',
                   lineHeight: '1.2'
                 }}>
                   {category.name}

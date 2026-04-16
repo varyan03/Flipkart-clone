@@ -222,3 +222,10 @@ export const PlaneIcon = () => (
     <path d="M22 16.92v-1.2l-9-5.78v-5.69c0-1.12-.9-2.03-2-2.03s-2 .91-2 2.03v5.69l-9 5.78v1.2l9-2.81v5.61l-2.25 1.68v1.12l3.25-1 3.25 1v-1.12l-2.25-1.68v-5.61l9 2.81z" />
   </svg>
 );
+
+export const CircleArrowIcon = ({ size = 32 }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="16" cy="16" r="14" fill="black"/>
+    <path d="M12 16H20M20 16L17 13M20 16L17 19" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
