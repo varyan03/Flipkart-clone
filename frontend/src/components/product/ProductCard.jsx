@@ -11,8 +11,9 @@ import AssuredBadge from '../ui/AssuredBadge';
  * @param {Object} props
  * @param {Object} props.product - The product data object
  * @param {boolean} [props.isDealsVariant=false] - Whether to render in the compact deal style
+ * @param {boolean} [props.isListingVariant=false] - Whether to render in listing-page phone template style
  */
-export default function ProductCard({ product, isDealsVariant = false }) {
+export default function ProductCard({ product, isDealsVariant = false, isListingVariant = false }) {
   const navigate = useNavigate();
 
   // Handle parsing images array properly (SQLite returns string, PostgreSQL returns native array)
@@ -25,6 +26,41 @@ export default function ProductCard({ product, isDealsVariant = false }) {
   const imageUrl = images[0] || '';
 
   const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
+  const listingRating = Number(product.rating || 0).toFixed(1);
+
+  if (isListingVariant) {
+    return (
+      <div onClick={() => navigate(`/product/${product.id}`)} className="listing-product-card">
+        <div className="listing-product-image-wrap">
+          <img src={imageUrl} alt={product.name} loading="lazy" />
+
+          {product.rating && (
+            <div className="listing-product-rating-pill">
+              {listingRating} ★
+              {product.ratingCount ? <span>| {Math.round(product.ratingCount / 1000)}k</span> : null}
+            </div>
+          )}
+
+          <div className="listing-product-wishlist">
+            <WishlistButton productId={product.id} />
+          </div>
+        </div>
+
+        <div className="listing-product-content">
+          <p className="listing-product-brand">{product.brand}</p>
+          <h3 className="listing-product-title line-clamp-2">{product.name}</h3>
+          <p className="listing-product-desc line-clamp-1">{product.description || product.category || 'Special product'}</p>
+
+          <div className="listing-product-price-row">
+            <span className="listing-product-discount">↓{discountPercent}%</span>
+            <span className="listing-product-mrp">₹{product.mrp.toLocaleString('en-IN')}</span>
+            <span className="listing-product-price">₹{product.price.toLocaleString('en-IN')}</span>
+          </div>
+          <p className="listing-product-offer">Special price</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isDealsVariant) {
     return (

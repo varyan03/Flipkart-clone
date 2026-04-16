@@ -28,29 +28,20 @@ export default function ProductListingPage() {
   };
 
   return (
-    <div style={{ maxWidth: '1248px', margin: '0 auto', display: 'flex', gap: '16px', padding: '0 16px' }}>
+    <div className="listing-page">
       
       {/* Sidebar / Filters (Simplified) */}
-      <div style={{
-        width: '280px',
-        background: '#fff',
-        padding: '16px',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        alignSelf: 'flex-start'
-      }}>
-        <h2 style={{ fontSize: '18px', margin: 0, fontWeight: 500, borderBottom: '1px solid var(--fk-border)', paddingBottom: '12px' }}>
+      <div className="listing-filters">
+        <h2 className="listing-filters-title">
           Filters
         </h2>
         
-        <div>
-          <h3 style={{ fontSize: '13px', textTransform: 'uppercase', color: 'var(--fk-text-secondary)', marginBottom: '8px' }}>Sort By</h3>
+        <div className="listing-sort-group">
+          <h3>Sort By</h3>
           <select 
             onChange={handleFilterChange} 
             value={searchParams.get('sort') || ''}
-            style={{ width: '100%', padding: '8px', border: '1px solid var(--fk-border)', outline: 'none' }}
+            className="listing-sort-select"
           >
             <option value="">Relevance</option>
             <option value="price_asc">Price -- Low to High</option>
@@ -61,33 +52,29 @@ export default function ProductListingPage() {
       </div>
 
       {/* Product List Grid */}
-      <div style={{ flex: 1, background: '#fff', padding: '16px', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
+      <div className="listing-results">
         
-        <div style={{ paddingBottom: '16px', borderBottom: '1px solid var(--fk-border)', marginBottom: '16px' }}>
-          <span style={{ fontWeight: 500 }}>
+        <div className="listing-results-head">
+          <span className="listing-results-title">
             {searchParams.get('search') 
               ? `Showing results for "${searchParams.get('search')}"` 
               : searchParams.get('category') 
                 ? `${searchParams.get('category')} Products` 
                 : 'All Products'}
           </span>
-          <span style={{ color: 'var(--fk-text-secondary)', marginLeft: '8px', fontSize: '12px' }}>
+          <span className="listing-results-meta">
             (Showing {products.length} of {data?.total} products)
           </span>
         </div>
 
         {products.length === 0 ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--fk-text-secondary)' }}>
+          <div className="listing-no-results">
             No products found matching your criteria.
           </div>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '8px',
-          }}>
+          <div className="listing-products-grid">
             {products.map(product => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} isListingVariant />
             ))}
           </div>
         )}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import useCartStore from '../../store/cartStore';
 import useAuthStore from '../../store/authStore';
-import { HeartIcon, OrdersIcon, ChevronDownIcon, LogoutIcon } from '../icons/Icons';
+import { HeartIcon, OrdersIcon, ChevronDownIcon, LogoutIcon, CartIcon, SearchIcon } from '../icons/Icons';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -10,7 +10,6 @@ export default function Navbar() {
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
 
-  const items = useCartStore(state => state.items);
   const getItemCount = useCartStore(state => state.getItemCount);
   const itemCount = getItemCount();
 
@@ -32,19 +31,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav style={{
-      height: '64px',
-      background: 'var(--fk-blue-gradient)',
-      padding: '0 24px',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      boxShadow: 'var(--shadow-md)'
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', maxWidth: '1248px', width: '100%', gap: '20px' }}>
+    <nav className="main-navbar">
+  <div className="hide-on-mobile" style={{ display: 'flex', alignItems: 'center', maxWidth: '1248px', width: '100%', gap: '20px' }}>
 
         {/* Logo */}
         <div style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', flexShrink: 0 }} onClick={() => navigate('/')}>
@@ -107,16 +95,16 @@ export default function Navbar() {
                     padding: '8px 0'
                   }}>
                     {[
-                      { label: 'Orders', icon: OrdersIcon, to: '/orders' },
-                      { label: 'Wishlist', icon: HeartIcon, to: '/wishlist' },
-                    ].map(({ label, icon: Icon, to }) => (
+                      { label: 'Orders', iconNode: <OrdersIcon style={{ width: '16px', height: '16px', color: 'var(--fk-blue)' }} />, to: '/orders' },
+                      { label: 'Wishlist', iconNode: <HeartIcon style={{ width: '16px', height: '16px', color: 'var(--fk-blue)' }} />, to: '/wishlist' },
+                    ].map(({ label, iconNode, to }) => (
                       <Link key={to} to={to} style={{
                         display: 'flex', alignItems: 'center', gap: '12px', padding: '12px 20px', fontSize: '14px',
                         color: 'var(--fk-text-primary)', borderBottom: '1px solid #f0f0f0', textDecoration: 'none'
                       }}
                         onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                         onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-                      ><Icon style={{ width: '16px', height: '16px', color: 'var(--fk-blue)' }} /> {label}</Link>
+                      >{iconNode} {label}</Link>
                     ))}
                     <button onClick={handleLogout} style={{
                       display: 'flex', alignItems: 'center', gap: '12px', width: '100%', textAlign: 'left',
@@ -173,6 +161,30 @@ export default function Navbar() {
           </div>
 
         </div>
+      </div>
+
+      <div className="mobile-only main-navbar-mobile">
+        <button className="main-navbar-mobile-icon" onClick={() => navigate(-1)} aria-label="Go back">
+          ←
+        </button>
+
+        <form onSubmit={handleSearch} className="main-navbar-mobile-search">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search for Products, Brands and More"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            aria-label="Search products"
+          />
+        </form>
+
+        <button className="main-navbar-mobile-icon" onClick={() => navigate('/cart')} aria-label="Open cart">
+          <span className="main-navbar-mobile-cart-wrap">
+            <CartIcon />
+            {itemCount > 0 && <span className="main-navbar-mobile-cart-badge">{itemCount}</span>}
+          </span>
+        </button>
       </div>
     </nav>
   );
