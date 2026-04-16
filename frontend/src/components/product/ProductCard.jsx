@@ -49,7 +49,6 @@ export default function ProductCard({ product, isDealsVariant = false, isListing
         <div className="listing-product-content">
           <p className="listing-product-brand">{product.brand}</p>
           <h3 className="listing-product-title line-clamp-2">{product.name}</h3>
-          <p className="listing-product-desc line-clamp-1">{product.description || product.category || 'Special product'}</p>
 
           <div className="listing-product-price-row">
             <span className="listing-product-discount">↓{discountPercent}%</span>

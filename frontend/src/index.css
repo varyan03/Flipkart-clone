@@ -720,6 +720,190 @@ html, body { overflow-x: hidden; }
   }
 }
 
+/* Product Detail responsive layout */
+.pd-page {
+  max-width: 1248px;
+  margin: 16px auto;
+  background: #fff;
+  display: flex;
+  padding: 24px;
+  gap: 32px;
+}
+
+.pd-left-col {
+  width: 40%;
+}
+
+.pd-action-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.pd-action-btn {
+  flex: 1;
+  height: 50px;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pd-buy-btn {
+  background: var(--fk-buy-now);
+}
+
+.pd-right-col {
+  flex: 1;
+}
+
+.pd-breadcrumb {
+  color: var(--fk-text-secondary);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.pd-title {
+  font-size: 24px;
+  font-weight: 400;
+  margin: 0 0 8px;
+  color: var(--fk-text-primary);
+  line-height: 1.25;
+}
+
+.pd-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pd-rating-meta {
+  color: var(--fk-text-secondary);
+}
+
+.pd-special-price {
+  color: var(--fk-green);
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.pd-price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.pd-price {
+  font-size: 40px;
+  font-weight: 500;
+}
+
+.pd-mrp {
+  font-size: 16px;
+  color: var(--fk-text-secondary);
+  text-decoration: line-through;
+}
+
+.pd-discount {
+  font-size: 16px;
+  color: var(--fk-green);
+  font-weight: 500;
+}
+
+.pd-stock {
+  margin-bottom: 24px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.pd-specs-wrap {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  margin-bottom: 16px;
+}
+
+.pd-spec-row {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.pd-spec-label {
+  width: 110px;
+  color: var(--fk-text-secondary);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.pd-spec-list {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pd-description-text {
+  font-size: 14px;
+  flex: 1;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .pd-page {
+    margin: 0;
+    padding: 12px 10px 20px;
+    gap: 12px;
+    display: block;
+  }
+
+  .pd-left-col,
+  .pd-right-col {
+    width: 100%;
+  }
+
+  .pd-title {
+    font-size: 22px;
+  }
+
+  .pd-price {
+    font-size: 28px;
+  }
+
+  .pd-spec-row {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .pd-spec-label {
+    width: 100%;
+  }
+
+  .pd-action-row {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    z-index: 20;
+    margin-top: 10px;
+  }
+
+  .pd-action-btn {
+    height: 46px;
+    font-size: 15px;
+  }
+}
+
 /* Landing Top Selection Section */
 .landing-top-selection-wrap {
   max-width: 1248px;

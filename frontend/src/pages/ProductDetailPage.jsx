@@ -48,22 +48,18 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div style={{ maxWidth: '1248px', margin: '16px auto', background: '#fff', display: 'flex', padding: '24px', gap: '32px' }}>
+    <div className="pd-page">
       
       {/* Left Column (Images & Actions) */}
-      <div style={{ width: '40%' }}>
+      <div className="pd-left-col">
         <ImageCarousel images={images} />
         
-        <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
+        <div className="pd-action-row">
           <button 
             onClick={handleAddToCart}
             disabled={adding || product.stock === 0}
-            style={{
-              flex: 1, height: '50px', background: added ? 'var(--fk-green)' : 'var(--fk-orange)',
-              color: '#fff', border: 'none', borderRadius: '2px',
-              fontSize: '16px', fontWeight: 500,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-            }}
+            className="pd-action-btn pd-add-btn"
+            style={{ background: added ? 'var(--fk-green)' : 'var(--fk-orange)' }}
           >
             {adding ? 'Adding...' : added ? '✓ Added to Cart' : '🛒 ADD TO CART'}
           </button>
@@ -71,12 +67,7 @@ export default function ProductDetailPage() {
           <button 
             onClick={handleBuyNow}
             disabled={product.stock === 0}
-            style={{
-              flex: 1, height: '50px', background: 'var(--fk-buy-now)',
-              color: '#fff', border: 'none', borderRadius: '2px',
-              fontSize: '16px', fontWeight: 500,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px'
-            }}
+            className="pd-action-btn pd-buy-btn"
           >
             ⚡ BUY NOW
           </button>
@@ -84,56 +75,56 @@ export default function ProductDetailPage() {
       </div>
 
       {/* Right Column (Details) */}
-      <div style={{ flex: 1 }}>
-        <div style={{ color: 'var(--fk-text-secondary)', fontSize: '14px', marginBottom: '8px' }}>
+      <div className="pd-right-col">
+        <div className="pd-breadcrumb">
           Home {'>'} {product.category?.name} {'>'} {product.brand}
         </div>
         
-        <h1 style={{ fontSize: '18px', fontWeight: 400, margin: '0 0 8px 0', color: 'var(--fk-text-primary)' }}>
+        <h1 className="pd-title">
           {product.name}
         </h1>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+        <div className="pd-rating-row">
           <span className="rating-badge rating-high">{product.rating} ★</span>
-          <span style={{ color: 'var(--fk-text-secondary)' }}>
+          <span className="pd-rating-meta">
             {product.ratingCount.toLocaleString()} Ratings & Reviews
           </span>
         </div>
 
-        <div style={{ color: 'var(--fk-green)', fontWeight: 500, fontSize: '14px', marginBottom: '4px' }}>
+        <div className="pd-special-price">
           Special price
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '16px' }}>
-          <span style={{ fontSize: '28px', fontWeight: 500 }}>₹{product.price.toLocaleString('en-IN')}</span>
-          <span style={{ fontSize: '16px', color: 'var(--fk-text-secondary)', textDecoration: 'line-through' }}>
+        <div className="pd-price-row">
+          <span className="pd-price">₹{product.price.toLocaleString('en-IN')}</span>
+          <span className="pd-mrp">
             ₹{product.mrp.toLocaleString('en-IN')}
           </span>
-          <span style={{ fontSize: '16px', color: 'var(--fk-green)', fontWeight: 500 }}>
+          <span className="pd-discount">
             {discountPercent}% off
           </span>
         </div>
 
         {/* Stock Status */}
-        <div style={{ marginBottom: '24px', fontWeight: 500, fontSize: '14px', 
+        <div className="pd-stock" style={{
           color: product.stock === 0 ? 'var(--fk-red)' : product.stock <= 5 ? 'var(--fk-amber)' : 'var(--fk-green)' }}>
           {product.stock === 0 ? 'Out of Stock' : product.stock <= 5 ? `Hurry, Only ${product.stock} left!` : 'In Stock'}
         </div>
 
         {/* Specs Highlights */}
-        <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: '16px', marginBottom: '16px' }}>
-          <div style={{ display: 'flex', marginBottom: '16px' }}>
-            <div style={{ width: '110px', color: 'var(--fk-text-secondary)', fontSize: '14px' }}>Highlights</div>
-            <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '14px', flex: 1, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <div className="pd-specs-wrap">
+          <div className="pd-spec-row">
+            <div className="pd-spec-label">Highlights</div>
+            <ul className="pd-spec-list">
               {Object.entries(specs).map(([key, val]) => (
                 <li key={key}>{key}: {val}</li>
               ))}
             </ul>
           </div>
 
-          <div style={{ display: 'flex' }}>
-            <div style={{ width: '110px', color: 'var(--fk-text-secondary)', fontSize: '14px' }}>Description</div>
-            <div style={{ fontSize: '14px', flex: 1, lineHeight: '1.5' }}>
+          <div className="pd-spec-row">
+            <div className="pd-spec-label">Description</div>
+            <div className="pd-description-text">
               {product.description}
             </div>
           </div>
