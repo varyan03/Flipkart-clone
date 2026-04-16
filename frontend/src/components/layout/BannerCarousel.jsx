@@ -28,6 +28,24 @@ const slides = [
     subtext: 'Slimmest 9020 mAh smartphone',
     brand: 'OriginOS',
     img: 'https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg'
+  },
+  {
+    id: 4,
+    bg: 'linear-gradient(90deg, #11998e 0%, #38ef7d 100%)',
+    title: 'Kitchen Essentials',
+    tagline: 'MIN. 50% OFF',
+    subtext: 'Upgrade your home',
+    brand: 'PRESTIGE',
+    img: 'https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg'
+  },
+  {
+    id: 5,
+    bg: 'linear-gradient(90deg, #fc466b 0%, #3f5efb 100%)',
+    title: 'Summer Fashion',
+    tagline: 'EXTRA 20% OFF',
+    subtext: 'Style for the season',
+    brand: 'ADIDAS',
+    img: 'https://static-assets-web.flixcart.com/batman-returns/batman-returns/p/images/fkheaderlogo_exploreplus-44005d.svg'
   }
 ];
 
