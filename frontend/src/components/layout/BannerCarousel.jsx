@@ -49,6 +49,13 @@ const slides = [
   }
 ];
 
+/**
+ * A responsive, slim hero banner carousel with auto-play functionality.
+ * Displays promotional cards with custom gradients and brand identification.
+ * Uses CSS transforms for high-performance transitions.
+ * 
+ * @component
+ */
 export default function BannerCarousel() {
   const [current, setCurrent] = useState(0);
 

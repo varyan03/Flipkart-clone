@@ -37,16 +37,16 @@ const generateProducts = (categorySlug, categoryId) => {
       rating: 3.5 + (id % 15) / 10,
       ratingCount: 100 + id * 10,
       brand,
-      images: JSON.stringify([
+      images: [
         `https://picsum.photos/seed/fk-${id}-1/400/400`,
         `https://picsum.photos/seed/fk-${id}-2/400/400`,
         `https://picsum.photos/seed/fk-${id}-3/400/400`
-      ]),
-      specs: JSON.stringify({
+      ],
+      specs: {
         "Color": ["Black", "White", "Blue"][id%3],
         "Weight": `${200 + id}g`,
         "Warranty": "1 Year"
-      }),
+      },
       categoryId
     });
   }

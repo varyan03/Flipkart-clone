@@ -2,6 +2,16 @@ const prisma = require('../lib/prisma');
 const { AppError } = require('../utils/response');
 const { randomUUID } = require('crypto');
 
+/**
+ * Places a formal order from a cart. Performs stock validation and 
+ * atomic transaction for order creation, stock decrement, and cart deletion.
+ * 
+ * @param {string} cartId - The unique UUID of the cart to process
+ * @param {Object} addressInfo - Delivery address details
+ * @param {number|null} [userId=null] - Optional user ID if authenticated
+ * @returns {Promise<Object>} Object containing the new orderId
+ * @throws {AppError} 400 if cart is empty or items are out of stock
+ */
 async function placeOrder(cartId, addressInfo, userId = null) {
   const cart = await prisma.cart.findUnique({
     where: { id: cartId },
@@ -56,6 +66,13 @@ async function placeOrder(cartId, addressInfo, userId = null) {
   return { orderId: order.id };
 }
 
+/**
+ * Retrieves a single order's details by its ID.
+ * 
+ * @param {string} orderId - The unique UUID of the order
+ * @returns {Promise<Object>} The order object with address and items
+ * @throws {AppError} 404 if order is not found
+ */
 async function getOrderById(orderId) {
   const order = await prisma.order.findUnique({
     where: { id: orderId },
@@ -73,6 +90,12 @@ async function getOrderById(orderId) {
   return order;
 }
 
+/**
+ * Fetches the complete order history for a specific user.
+ * 
+ * @param {number} userId - The unique ID of the user
+ * @returns {Promise<Array>} List of orders with items and basic address info
+ */
 async function getOrderHistory(userId) {
   return prisma.order.findMany({
     where: { userId },

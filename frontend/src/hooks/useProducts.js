@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { productApi } from '../api/productApi';
 
+/**
+ * Custom hook for managing product data lifecycle.
+ * Syncs URL search parameters with backend API calls to provide paginated,
+ * filtered, and sorted product data with loading/error states.
+ * 
+ * @returns {Object} { data: { products: Array, total: number, ... }, loading: boolean, error: string|null }
+ */
 export function useProducts() {
   const [searchParams] = useSearchParams();
   const [data, setData] = useState(null);

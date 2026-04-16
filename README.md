@@ -171,4 +171,22 @@ cd frontend && npm run dev
 - `npm run build` — Generates production frontend bundle.
 - `npx prisma studio` — Visual GUI for managing your local/production database.
 
+## 🧪 Testing
+
+The backend includes a suite of integration tests built with **Jest** and **Supertest** to ensure API reliability across Auth, Products, and Cart features.
+
+### Running Tests
+```bash
+cd backend
+npm test
+```
+
+### Test Coverage
+- **Auth**: Validates user registration, secure login, and JSON Web Token (JWT) refresh cycles.
+- **Products**: Ensures accurate data retrieval for product listings, category filters, and debounced search queries.
+- **Cart**: Verifies the logic for adding, updating, and removing items with optimistic UI support.
+
+> [!TIP]
+> **Production Parity**: It is best practice to run these tests against a clean database instance (different from your development DB) to ensure test isolation and data integrity.
+
 

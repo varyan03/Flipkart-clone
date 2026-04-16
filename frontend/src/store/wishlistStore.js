@@ -1,11 +1,19 @@
 import { create } from 'zustand';
 import { wishlistApi } from '../api/wishlistApi';
 
+/**
+ * Global wishlist state store using Zustand.
+ * Manages the collection of user-favorited products and provides
+ * optimistic UI updates for toggling wishlist status.
+ */
 const useWishlistStore = create((set, get) => ({
-  items: [],
-  wishlistedIds: new Set(),
+  items: [],             // Array of wishlist items with nested product data
+  wishlistedIds: new Set(), // Set of product IDs for O(1) membership checks
   loading: false,
 
+  /** 
+   * Fetches the user's wishlist from the API and synchronizes the local ID set.
+   */
   fetchWishlist: async () => {
     set({ loading: true });
     try {
@@ -21,6 +29,11 @@ const useWishlistStore = create((set, get) => ({
     }
   },
 
+  /** 
+   * Toggles a product's presence in the wishlist with an optimistic UI revert pattern.
+   * 
+   * @param {number|string} productId - ID of the product to toggle
+   */
   toggle: async (productId) => {
     const { wishlistedIds } = get();
     const isWishlisted = wishlistedIds.has(productId);
@@ -39,11 +52,17 @@ const useWishlistStore = create((set, get) => ({
         await get().fetchWishlist();
       }
     } catch (err) {
-      set({ wishlistedIds }); // revert
+      set({ wishlistedIds }); // revert on failure
       throw err;
     }
   },
 
+  /** 
+   * Helper to check if a product is in the wishlist.
+   * 
+   * @param {number|string} productId
+   * @returns {boolean}
+   */
   isWishlisted: (productId) => get().wishlistedIds.has(productId),
 }));
 

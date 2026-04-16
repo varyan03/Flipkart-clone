@@ -1,5 +1,11 @@
 const prisma = require('../lib/prisma');
 
+/**
+ * Retrieves the wishlist for a specific user, including product details.
+ * 
+ * @param {number} userId - The unique ID of the user
+ * @returns {Promise<Array>} List of wishlist items with product information
+ */
 async function getWishlist(userId) {
   return prisma.wishlist.findMany({
     where: { userId },
@@ -12,6 +18,13 @@ async function getWishlist(userId) {
   });
 }
 
+/**
+ * Adds a product to a user's wishlist. Uses upsert to prevent duplicates.
+ * 
+ * @param {number} userId - The unique ID of the user
+ * @param {number} productId - The unique ID of the product
+ * @returns {Promise<Object>} The created or existing wishlist record
+ */
 async function addToWishlist(userId, productId) {
   return prisma.wishlist.upsert({
     where: { userId_productId: { userId, productId } },
@@ -20,6 +33,13 @@ async function addToWishlist(userId, productId) {
   });
 }
 
+/**
+ * Removes a product from a user's wishlist.
+ * 
+ * @param {number} userId - The unique ID of the user
+ * @param {number} productId - The unique ID of the product
+ * @returns {Promise<void>}
+ */
 async function removeFromWishlist(userId, productId) {
   await prisma.wishlist.deleteMany({ where: { userId, productId } });
 }

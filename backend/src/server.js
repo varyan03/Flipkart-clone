@@ -14,15 +14,25 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 
 const app = express();
 
-// Middleware
+// SECURITY: Helmet helps secure the app by setting various HTTP headers.
+// Mandatory for any production environment.
 app.use(helmet());
+
+// CORS: Configured to restrict access. In production, process.env.FRONTEND_URL 
+// should be set to your deployed frontend domain.
 app.use(cors({
   origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:5173'] : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-  credentials: true  // Required for httpOnly cookies
+  credentials: true  // Required for cross-origin httpOnly cookies
 }));
+
+// BODY PARSER & COOKIES: Standard middleware for handling JSON payloads and 
+// authenticated session cookies.
 app.use(express.json());
 app.use(cookieParser());
+
+// LOGGING: 'morgan' provides request logging. Consider using a rotating file logger
+// (like winston) for long-term production logs.
 app.use(morgan('dev'));
 
 // Health check

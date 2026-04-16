@@ -2,8 +2,13 @@ const jwt = require('jsonwebtoken');
 const { AppError } = require('../utils/response');
 
 /**
- * Middleware that verifies the JWT access token from the httpOnly cookie.
- * Attaches req.user = { id } if valid.
+ * Middleware that strictly verifies the JWT access token from the httpOnly cookie.
+ * Attaches the authenticated user ID to req.user if valid.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
+ * @throws {AppError} 401 if token is missing, expired, or invalid
  */
 function authenticate(req, res, next) {
   const token = req.cookies?.accessToken;
@@ -20,7 +25,13 @@ function authenticate(req, res, next) {
 }
 
 /**
- * Optional auth — attaches req.user if cookie present, doesn't block if not.
+ * Middleware for optional authentication. 
+ * Attaches req.user if a valid cookie is present, but allows the request
+ * to proceed for guests if no token exists.
+ * 
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware function
  */
 function optionalAuth(req, res, next) {
   const token = req.cookies?.accessToken;
@@ -29,7 +40,7 @@ function optionalAuth(req, res, next) {
     const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     req.user = { id: payload.userId };
   } catch {
-    // Silently ignore — guest user
+    // Silently ignore invalid tokens — treat as guest
   }
   next();
 }

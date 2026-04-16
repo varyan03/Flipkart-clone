@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+/**
+ * Axios instance configured with a base URL and credentials support.
+ * Used for all authenticated API communication.
+ */
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5001/api/v1',
   withCredentials: true,  // sends httpOnly cookies automatically
@@ -9,6 +13,11 @@ const apiClient = axios.create({
 let isRefreshing = false;
 let failedQueue = [];
 
+/**
+ * Processes the queue of failed requests that were waiting for a token refresh.
+ * 
+ * @param {Error|null} error - The error encountered during refresh, if any
+ */
 const processQueue = (error) => {
   failedQueue.forEach(({ resolve, reject }) => error ? reject(error) : resolve());
   failedQueue = [];

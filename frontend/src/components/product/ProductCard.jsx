@@ -2,6 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import WishlistButton from './WishlistButton';
 import AssuredBadge from '../ui/AssuredBadge';
 
+/**
+ * Primary product representation component.
+ * Supports two variants: 'DealsVariant' (compact, centered) for home deal sections
+ * and the standard 'Flipkart-style' card for listing grids.
+ * 
+ * @component
+ * @param {Object} props
+ * @param {Object} props.product - The product data object
+ * @param {boolean} [props.isDealsVariant=false] - Whether to render in the compact deal style
+ */
 export default function ProductCard({ product, isDealsVariant = false }) {
   const navigate = useNavigate();
 
