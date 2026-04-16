@@ -38,8 +38,10 @@ export default function CartPage() {
         </div>
 
         {items.map(({ product, quantity }) => {
-          let imageUrl = '';
-          try { imageUrl = JSON.parse(product.images)[0]; } catch(e) { imageUrl = product.images; }
+          const images = Array.isArray(product.images) 
+            ? product.images 
+            : (() => { try { return JSON.parse(product.images); } catch(e) { return [product.images]; } })();
+          const imageUrl = images[0] || '';
           const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 
           return (

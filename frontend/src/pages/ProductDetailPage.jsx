@@ -24,11 +24,13 @@ export default function ProductDetailPage() {
   if (loading) return <div style={{ padding: '24px', textAlign: 'center' }}>Loading...</div>;
   if (!product) return <div style={{ padding: '24px', textAlign: 'center' }}>Product not found</div>;
 
-  let images = [];
-  try { images = JSON.parse(product.images); } catch(e) { images = [product.images]; }
+  const images = Array.isArray(product.images) 
+    ? product.images 
+    : (() => { try { return JSON.parse(product.images); } catch(e) { return [product.images]; } })();
 
-  let specs = {};
-  try { specs = JSON.parse(product.specs); } catch(e) {}
+  const specs = (typeof product.specs === 'object' && product.specs !== null)
+    ? product.specs
+    : (() => { try { return JSON.parse(product.specs); } catch(e) { return {}; } })();
 
   const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 

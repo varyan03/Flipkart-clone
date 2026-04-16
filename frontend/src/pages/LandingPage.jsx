@@ -10,8 +10,8 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch products from all categories to create a mixed "Featured Deals" list
-        const response = await productApi.getProducts({ limit: 20 });
+        // Fetch specifically electronics for the featured deal section
+        const response = await productApi.getProducts({ category: 'electronics', limit: 10 });
         setFeaturedProducts(response.data?.products || []);
       } catch (err) {
         console.error('Failed to load featured deals:', err);

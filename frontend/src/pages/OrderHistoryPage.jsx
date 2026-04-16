@@ -44,6 +44,7 @@ export default function OrderHistoryPage() {
   }
 
   const parseImages = (images) => {
+    if (Array.isArray(images)) return images;
     try { return JSON.parse(images); } catch { return [images]; }
   };
 

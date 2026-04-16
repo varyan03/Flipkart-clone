@@ -15,14 +15,14 @@ import AssuredBadge from '../ui/AssuredBadge';
 export default function ProductCard({ product, isDealsVariant = false }) {
   const navigate = useNavigate();
 
-  // Handle parsing images array properly since it's JSON string in SQLite
-  let imageUrl = '';
-  try {
-    const images = JSON.parse(product.images);
-    imageUrl = images[0] || '';
-  } catch (e) {
-    imageUrl = product.images; // fallback if plain string
-  }
+  // Handle parsing images array properly (SQLite returns string, PostgreSQL returns native array)
+  const images = Array.isArray(product.images) 
+    ? product.images 
+    : (() => {
+        try { return JSON.parse(product.images); } 
+        catch { return [product.images]; }
+      })();
+  const imageUrl = images[0] || '';
 
   const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 
