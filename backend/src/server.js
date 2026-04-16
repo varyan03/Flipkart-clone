@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const { errorHandler } = require('./middleware/errorHandler');
@@ -14,8 +15,9 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const app = express();
 
 // Middleware
+app.use(helmet());
 app.use(cors({
-  origin: [process.env.FRONTEND_URL, 'http://localhost:5173'],
+  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL, 'http://localhost:5173'] : 'http://localhost:5173',
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
   credentials: true  // Required for httpOnly cookies
 }));
