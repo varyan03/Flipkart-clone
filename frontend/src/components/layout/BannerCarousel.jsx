@@ -58,25 +58,40 @@ const slides = [
  */
 export default function BannerCarousel() {
   const [current, setCurrent] = useState(0);
+  const [slidesPerView, setSlidesPerView] = useState(3);
+
+  useEffect(() => {
+    const updateSlidesPerView = () => {
+      if (window.innerWidth <= 640) {
+        setSlidesPerView(1);
+      } else if (window.innerWidth <= 1024) {
+        setSlidesPerView(2);
+      } else {
+        setSlidesPerView(3);
+      }
+    };
+
+    updateSlidesPerView();
+    window.addEventListener('resize', updateSlidesPerView);
+    return () => window.removeEventListener('resize', updateSlidesPerView);
+  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrent((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
   }, []);
-
-  const prevSlide = () => {
-    setCurrent((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
-  };
 
   useEffect(() => {
     const timer = setInterval(nextSlide, 5000);
     return () => clearInterval(timer);
   }, [nextSlide]);
 
+  const carouselHeight = slidesPerView === 1 ? 170 : slidesPerView === 2 ? 200 : 230;
+
   return (
-    <div style={{ position: 'relative', width: '100%', height: '200px', overflow: 'hidden', borderRadius: '8px' }}>
+    <div style={{ position: 'relative', width: '100%', height: `${carouselHeight}px`, overflow: 'hidden', borderRadius: '8px' }}>
       <div style={{ 
         display: 'flex', 
-        width: `${slides.length * 34}%`, // Each slide takes ~34% of parent
+        width: `${(slides.length * 100) / slidesPerView}%`,
         height: '100%', 
         gap: '12px',
         transform: `translateX(-${(current * 100) / slides.length}%)`, 
@@ -85,36 +100,36 @@ export default function BannerCarousel() {
       }}>
         {slides.map((slide) => (
           <div key={slide.id} style={{ 
-            width: `${100 / slides.length}%`, 
+            width: `${100 / slides.length}%`,
             height: '100%', 
             background: slide.bg, 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between',
-            padding: '0 24px',
+            padding: slidesPerView === 1 ? '0 14px' : '0 20px',
             color: '#fff',
             position: 'relative',
             borderRadius: '8px',
             flexShrink: 0
           }}>
-            <div style={{ maxWidth: '70%' }}>
+            <div style={{ maxWidth: slidesPerView === 1 ? '72%' : '70%' }}>
               <div style={{ background: '#000', color: '#fff', display: 'inline-block', padding: '2px 6px', fontSize: '11px', fontWeight: 'bold', marginBottom: '8px' }}>
                 {slide.brand}
               </div>
-              <h2 style={{ fontSize: '20px', fontWeight: 800, margin: '0 0 4px 0', lineHeight: 1.2 }}>
+              <h2 style={{ fontSize: slidesPerView === 1 ? '16px' : '20px', fontWeight: 800, margin: '0 0 4px 0', lineHeight: 1.2 }}>
                 {slide.title}
               </h2>
-              <p style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 4px 0' }}>
+              <p style={{ fontSize: slidesPerView === 1 ? '12px' : '14px', fontWeight: 600, margin: '0 0 4px 0' }}>
                 {slide.tagline}
               </p>
-              <p style={{ fontSize: '12px', opacity: 0.8, margin: 0 }}>
+              <p style={{ fontSize: slidesPerView === 1 ? '11px' : '12px', opacity: 0.8, margin: 0 }}>
                 {slide.subtext}
               </p>
             </div>
             
             {/* Visual element (placeholder) */}
-            <div style={{ width: '80px', height: '80px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
-               <img src={slide.img} alt="Deal" style={{ width: '50px', opacity: 0.9 }} />
+            <div style={{ width: slidesPerView === 1 ? '58px' : '80px', height: slidesPerView === 1 ? '58px' : '80px', background: 'rgba(255,255,255,0.1)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,0.2)' }}>
+               <img src={slide.img} alt="Deal" style={{ width: slidesPerView === 1 ? '34px' : '50px', opacity: 0.9 }} />
             </div>
           </div>
         ))}

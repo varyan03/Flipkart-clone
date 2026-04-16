@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import useCartStore from '../../store/cartStore';
 import useAuthStore from '../../store/authStore';
-import { CartIcon, UserIcon, HeartIcon, OrdersIcon, LogoutIcon, ChevronDownIcon, PlaneIcon, LocationIcon, PlusZoneIcon, StoreIcon, GiftIcon, CreditCardIcon, BellIcon, HeadsetIcon, TrendingUpIcon, DownloadIcon } from '../icons/Icons';
+import { CartIcon, UserIcon, HeartIcon, OrdersIcon, LogoutIcon, ChevronDownIcon, PlaneIcon, LocationIcon, SearchIcon, HomeIcon } from '../icons/Icons';
 
 export default function HomeNavbar() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [location, setLocation] = useState('185131');
+  const location = '185131';
 
   const itemCount = useCartStore(state => state.getItemCount)();
   const user = useAuthStore(state => state.user);
@@ -27,14 +27,8 @@ export default function HomeNavbar() {
   };
 
   return (
-    <nav style={{
-      background: '#fff',
-      boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
-      position: 'sticky',
-      top: 0,
-      zIndex: 100
-    }}>
-      <div style={{
+    <nav className="home-navbar">
+      <div className="home-navbar-desktop hide-on-mobile" style={{
         display: 'flex',
         alignItems: 'center',
         padding: '12px 16px',
@@ -214,9 +208,9 @@ export default function HomeNavbar() {
                   )}
 
                   {[
-                    { label: 'Orders', icon: OrdersIcon, to: '/orders' },
-                    { label: 'Wishlist', icon: HeartIcon, to: '/wishlist' },
-                  ].map(({ label, icon: Icon, to }) => (
+                    { label: 'Orders', iconNode: <OrdersIcon style={{ width: '18px', height: '18px'}} />, to: '/orders' },
+                    { label: 'Wishlist', iconNode: <HeartIcon style={{ width: '18px', height: '18px'}} />, to: '/wishlist' },
+                  ].map(({ label, iconNode, to }) => (
                     <Link key={label} to={user ? to : '/login'} style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -231,7 +225,7 @@ export default function HomeNavbar() {
                       onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                       onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
                     >
-                      <Icon style={{ width: '18px', height: '18px'}} />
+                      {iconNode}
                       {label}
                     </Link>
                   ))}
@@ -314,6 +308,79 @@ export default function HomeNavbar() {
           </div>
         </div>
       </div>
+
+      <div className="home-navbar-mobile mobile-only">
+        <div className="home-mobile-chip-row">
+          <button className="home-mobile-chip home-mobile-chip--brand" onClick={() => navigate('/')}>
+            Flipkart
+          </button>
+          <button className="home-mobile-chip home-mobile-chip--address">
+            <LocationIcon />
+            HOME House Number 149, ward no
+          </button>
+        </div>
+
+        <form onSubmit={handleSearch} className="home-mobile-search-form">
+          <SearchIcon />
+          <input
+            type="text"
+            placeholder="Search for Products, Brands and More"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="home-mobile-search-input"
+          />
+          <button type="submit" className="home-mobile-search-submit" aria-label="Search">
+            <SearchIcon />
+          </button>
+        </form>
+
+        <div className="home-mobile-spacer" />
+
+        <div className="home-mobile-bottom-nav">
+          <button className="home-mobile-bottom-item is-active" onClick={() => navigate('/')}>
+            <HomeIcon />
+            <span>Home</span>
+          </button>
+
+          <button className="home-mobile-bottom-item" onClick={() => navigate('/products')}>
+            <PlayIcon />
+            <span>Play</span>
+          </button>
+
+          <button className="home-mobile-bottom-item" onClick={() => navigate('/products')}>
+            <CategoriesIcon />
+            <span>Categories</span>
+          </button>
+
+          <button className="home-mobile-bottom-item" onClick={() => navigate(user ? '/orders' : '/login')}>
+            <UserIcon />
+            <span>Account</span>
+          </button>
+
+          <button className="home-mobile-bottom-item home-mobile-bottom-item--cart" onClick={() => navigate('/cart')}>
+            <CartIcon />
+            <span>Cart</span>
+            {itemCount > 0 && <span className="home-mobile-cart-badge">{itemCount}</span>}
+          </button>
+        </div>
+
+      </div>
     </nav>
   );
 }
+
+const PlayIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <polygon points="10,8 17,12 10,16" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const CategoriesIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+  </svg>
+);

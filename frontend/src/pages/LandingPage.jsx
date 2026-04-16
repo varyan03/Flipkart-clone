@@ -1,11 +1,29 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { productApi } from '../api/productApi';
-import ProductCarousel from '../components/product/ProductCarousel';
 import BannerCarousel from '../components/layout/BannerCarousel';
 
 export default function LandingPage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const getPrimaryImage = (product) => {
+    const raw = product?.images;
+    if (Array.isArray(raw)) return raw[0] || '';
+    if (typeof raw === 'string') {
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed[0] || '';
+      } catch {
+        return raw;
+      }
+      return raw;
+    }
+    return '';
+  };
+
+  const topSelectionProducts = featuredProducts.slice(0, 4);
+  const bestDealProducts = featuredProducts.slice(0, 4);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,24 +48,56 @@ export default function LandingPage() {
     );
   }
 
+  const renderSelectionSection = (title, products, ctaLink) => (
+    <section className="landing-top-selection-wrap">
+      <div className="landing-top-selection-head">
+        <h2>{title}</h2>
+        <Link to={ctaLink} className="landing-top-selection-cta" aria-label={`View ${title}`}>
+          →
+        </Link>
+      </div>
+
+      <div className="landing-top-selection-grid">
+        {products.map((product) => {
+          const image = getPrimaryImage(product);
+          const discount = product?.mrp && product?.price
+            ? Math.round((1 - product.price / product.mrp) * 100)
+            : null;
+
+          return (
+            <article key={product.id} className="landing-top-selection-card">
+              <Link to={`/product/${product.id}`} className="landing-top-selection-link">
+                <div className="landing-top-selection-image-box">
+                  <img src={image} alt={product.name} loading="lazy" />
+                </div>
+                <p className="landing-top-selection-brand">{product.brand || 'Featured'}</p>
+                <h3 className="landing-top-selection-title line-clamp-2">{product.name}</h3>
+                <p className="landing-top-selection-offer">
+                  {discount && discount > 0 ? `${discount}% Off` : 'Special offer'}
+                </p>
+              </Link>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+
   return (
-    <div style={{ background: '#f1f3f6', minHeight: '100vh', padding: '10px 0' }}>
+    <div className="landing-page-root" style={{ background: '#f1f3f6', minHeight: '100vh', padding: '10px 0' }}>
       
       {/* Centered Banner Area wrapped in max-width container */}
       <div style={{ maxWidth: '1248px', margin: '0 auto 10px', padding: '0 8px' }}>
         <BannerCarousel />
       </div>
 
-      {/* Single Featured Deals Carousel */}
-      <div style={{ padding: '0 8px' }}>
-        <ProductCarousel 
-          title="Best Deals on Electronics" 
-          products={featuredProducts} 
-          categorySlug="all"
-          variant="deals"
-          isStatic={true}
-        />
-      </div>
+      {/* Best Deals (styled same as Top Selection) */}
+      {bestDealProducts.length > 0 && renderSelectionSection('Best Deals on Electronics', bestDealProducts, '/products?category=electronics')}
+
+      {/* Top Selection Section (reference-inspired) */}
+      {topSelectionProducts.length > 0 && (
+        renderSelectionSection('Top Selection', topSelectionProducts, '/products?category=electronics')
+      )}
 
       {/* Trust & Features Section */}
       <div style={{ maxWidth: '1248px', margin: '30px auto', padding: '0 8px' }}>
