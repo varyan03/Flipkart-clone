@@ -15,12 +15,12 @@ export default function CartPage() {
 
   if (itemCount === 0) {
     return (
-      <div style={{ maxWidth: '1248px', margin: '16px auto', background: '#fff', padding: '40px', textAlign: 'center' }}>
-        <h2 style={{ fontWeight: 400 }}>Your cart is empty!</h2>
-        <div style={{ marginTop: '8px', color: 'var(--fk-text-secondary)' }}>Add items to it now.</div>
+      <div className="cart-empty-state">
+        <h2>Your cart is empty!</h2>
+        <div className="cart-empty-subtext">Add items to it now.</div>
         <button 
           onClick={() => navigate('/')}
-          style={{ marginTop: '24px', background: 'var(--fk-blue)', color: '#fff', padding: '12px 24px', border: 'none', borderRadius: '2px', fontWeight: 500 }}
+          className="cart-empty-btn"
         >
           Shop Now
         </button>
@@ -29,64 +29,62 @@ export default function CartPage() {
   }
 
   return (
-    <div style={{ maxWidth: '1248px', margin: '16px auto', display: 'flex', gap: '16px' }}>
+    <div className="cart-page">
       
       {/* Left: Cart Items */}
-      <div style={{ flex: 1, background: '#fff', boxShadow: '0 1px 2px rgba(0,0,0,0.1)' }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid #f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 500, margin: 0 }}>My Cart ({itemCount})</h2>
+      <div className="cart-main-panel">
+        <div className="cart-main-header">
+          <h2>My Cart ({itemCount})</h2>
         </div>
 
         {items.map(({ product, quantity }) => {
           const images = Array.isArray(product.images) 
             ? product.images 
-            : (() => { try { return JSON.parse(product.images); } catch(e) { return [product.images]; } })();
+            : (() => { try { return JSON.parse(product.images); } catch { return [product.images]; } })();
           const imageUrl = images[0] || '';
           const discountPercent = Math.round((1 - product.price / product.mrp) * 100);
 
           return (
-            <div key={product.id} style={{ display: 'flex', padding: '24px', borderBottom: '1px solid #f0f0f0' }}>
+            <div key={product.id} className="cart-item-row">
               {/* Product Img & Stepper */}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginRight: '24px', width: '112px' }}>
-                <img src={imageUrl} alt={product.name} style={{ width: '100%', height: '112px', objectFit: 'contain', marginBottom: '16px' }} />
+              <div className="cart-item-left">
+                <img src={imageUrl} alt={product.name} className="cart-item-image" />
                 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="cart-item-stepper">
                   <button 
                     disabled={quantity <= 1}
                     onClick={() => updateQuantity(product.id, quantity - 1)}
-                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid #e0e0e0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="cart-step-btn"
                   >-</button>
-                  <span style={{ border: '1px solid #e0e0e0', padding: '2px 12px', borderRadius: '2px' }}>{quantity}</span>
+                  <span className="cart-step-count">{quantity}</span>
                   <button 
                     disabled={quantity >= product.stock}
                     onClick={() => updateQuantity(product.id, quantity + 1)}
-                    style={{ width: '28px', height: '28px', borderRadius: '50%', border: '1px solid #e0e0e0', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    className="cart-step-btn"
                   >+</button>
                 </div>
               </div>
 
               {/* Product Details */}
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '16px', fontWeight: 400, marginBottom: '8px' }}>{product.name}</div>
-                <div style={{ fontSize: '12px', color: 'var(--fk-text-secondary)', marginBottom: '16px' }}>Seller: RetailNet</div>
+              <div className="cart-item-details">
+                <div className="cart-item-name">{product.name}</div>
+                <div className="cart-item-seller">Seller: RetailNet</div>
                 
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '24px' }}>
-                  <span style={{ fontSize: '14px', color: 'var(--fk-text-secondary)', textDecoration: 'line-through' }}>
+                <div className="cart-item-price-row">
+                  <span className="cart-item-mrp">
                     ₹{product.mrp.toLocaleString('en-IN')}
                   </span>
-                  <span style={{ fontSize: '18px', fontWeight: 500 }}>
+                  <span className="cart-item-price">
                     ₹{product.price.toLocaleString('en-IN')}
                   </span>
-                  <span style={{ fontSize: '14px', color: 'var(--fk-green)', fontWeight: 500 }}>
+                  <span className="cart-item-discount">
                     {discountPercent}% Off
                   </span>
                 </div>
 
                 <div 
                   onClick={() => removeItem(product.id)}
-                  style={{ fontSize: '16px', fontWeight: 500, cursor: 'pointer', display: 'inline-block' }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--fk-blue)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'inherit'}
+                  className="cart-item-remove"
                 >
                   REMOVE
                 </div>
@@ -95,10 +93,10 @@ export default function CartPage() {
           );
         })}
 
-        <div style={{ padding: '16px 24px', display: 'flex', justifyContent: 'flex-end', boxShadow: '0 -2px 10px rgba(0,0,0,0.1)' }}>
+        <div className="cart-main-footer">
           <button 
             onClick={() => navigate('/checkout')}
-            style={{ background: 'var(--fk-buy-now)', color: '#fff', padding: '16px 32px', fontSize: '16px', fontWeight: 500, border: 'none', borderRadius: '2px', width: '250px' }}
+            className="cart-place-order-btn"
           >
             PLACE ORDER
           </button>
@@ -106,28 +104,28 @@ export default function CartPage() {
       </div>
 
       {/* Right: Summary */}
-      <div style={{ width: '300px', background: '#fff', height: 'fit-content', boxShadow: '0 1px 2px rgba(0,0,0,0.1)', position: 'sticky', top: '80px' }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid #f0f0f0', color: 'var(--fk-text-secondary)', fontWeight: 500, fontSize: '16px' }}>
+      <div className="cart-summary-panel">
+        <div className="cart-summary-head">
           PRICE DETAILS
         </div>
-        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="cart-summary-body">
+          <div className="cart-summary-row">
             <span>Price ({itemCount} items)</span>
             <span>₹{(subtotal + savings).toLocaleString('en-IN')}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="cart-summary-row">
             <span>Discount</span>
-            <span style={{ color: 'var(--fk-green)' }}>− ₹{savings.toLocaleString('en-IN')}</span>
+            <span className="cart-summary-green">− ₹{savings.toLocaleString('en-IN')}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div className="cart-summary-row">
             <span>Delivery Charges</span>
-            <span style={{ color: 'var(--fk-green)' }}>Free</span>
+            <span className="cart-summary-green">Free</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px dashed #e0e0e0', borderBottom: '1px dashed #e0e0e0', padding: '20px 0', fontWeight: 500, fontSize: '18px' }}>
+          <div className="cart-summary-total">
             <span>Total Amount</span>
             <span>₹{subtotal.toLocaleString('en-IN')}</span>
           </div>
-          <div style={{ color: 'var(--fk-green)', fontWeight: 500 }}>
+          <div className="cart-summary-savings">
             You will save ₹{savings.toLocaleString('en-IN')} on this order
           </div>
         </div>
