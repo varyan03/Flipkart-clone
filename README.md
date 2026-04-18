@@ -1,4 +1,4 @@
-# 🛒 Flipkart Clone — Premium Fullstack E-commerce
+# 🛒 Flipkart Clone —  Fullstack E-commerce
 
 A high-fidelity, performance-optimized Flipkart clone designed to provide a pixel-perfect shopping experience. Featuring a modular monolith architecture, this project implements advanced E-commerce patterns like debounced search, in-memory caching, atomic order transactions, and secure JWT-based authentication.
 
@@ -67,7 +67,6 @@ flipkart-clone/
 │
 ├── .gitignore                         # Project-wide exclusions
 ├── README.md                          # You are here
-└── IMPLEMENTATION.md                  # Project Architecture & Roadmap
 ```
 
 ## Database Schema (Prisma)
